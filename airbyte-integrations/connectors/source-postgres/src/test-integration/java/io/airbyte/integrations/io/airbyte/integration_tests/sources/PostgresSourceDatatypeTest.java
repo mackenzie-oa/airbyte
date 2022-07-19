@@ -50,8 +50,8 @@ public class PostgresSourceDatatypeTest extends AbstractSourceDatabaseTypeTest {
         config.get("password").asText(),
         DatabaseDriver.POSTGRESQL.getDriverClassName(),
         String.format(DatabaseDriver.POSTGRESQL.getUrlFormatString(),
-            config.get("host").asText(),
-            config.get("port").asInt(),
+            container.getHost(),
+            container.getFirstMappedPort(),
             config.get("database").asText()),
         SQLDialect.POSTGRES);
     final Database database = new Database(dslContext);
