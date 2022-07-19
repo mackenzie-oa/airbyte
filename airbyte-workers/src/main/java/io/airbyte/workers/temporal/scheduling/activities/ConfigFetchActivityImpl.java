@@ -34,6 +34,8 @@ import org.quartz.CronExpression;
 @Slf4j
 public class ConfigFetchActivityImpl implements ConfigFetchActivity {
 
+  private final static long MS_PER_SECOND = 1000L;
+
   private ConfigRepository configRepository;
   private JobPersistence jobPersistence;
   private Configs configs;
@@ -82,7 +84,7 @@ public class ConfigFetchActivityImpl implements ConfigFetchActivity {
         cronExpression.setTimeZone(timeZone);
         final Date nextRunStart = cronExpression.getNextValidTimeAfter(new Date(currentSecondsSupplier.get() * 1000L));
         final Duration timeToWait = Duration.ofSeconds(
-            Math.max(0, nextRunStart.getTime() / 1000L - currentSecondsSupplier.get()));
+            Math.max(0, nextRunStart.getTime() / MS_PER_SECOND - currentSecondsSupplier.get()));
         return new ScheduleRetrieverOutput(timeToWait);
       } catch (ParseException e) {
         throw new DateTimeException(e.getMessage());

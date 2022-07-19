@@ -94,7 +94,7 @@ class ConfigFetchActivityTest {
   class TimeToWaitTest {
 
     @Test
-    @DisplayName("Test that the job get scheduled if it is not manual and if it is the first run")
+    @DisplayName("Test that the job gets scheduled if it is not manual and if it is the first run with legacy schedule schema")
     void testFirstJobNonManual() throws IOException, JsonValidationException, ConfigNotFoundException {
       configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> Instant.now().getEpochSecond());
       Mockito.when(mJobPersistence.getLastReplicationJob(connectionId))
@@ -112,7 +112,7 @@ class ConfigFetchActivityTest {
     }
 
     @Test
-    @DisplayName("Test that the job will wait for a long time if it is manual")
+    @DisplayName("Test that the job will wait for a long time if it is manual in the legacy schedule schema")
     void testManual() throws IOException, JsonValidationException, ConfigNotFoundException {
       configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> Instant.now().getEpochSecond());
 
@@ -160,7 +160,7 @@ class ConfigFetchActivityTest {
     }
 
     @Test
-    @DisplayName("Test we will wait the required amount of time")
+    @DisplayName("Test we will wait the required amount of time with legacy config")
     void testWait() throws IOException, JsonValidationException, ConfigNotFoundException {
       configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> 60L * 3);
 
@@ -182,7 +182,7 @@ class ConfigFetchActivityTest {
     }
 
     @Test
-    @DisplayName("Test we will not wait if we are late")
+    @DisplayName("Test we will not wait if we are late in the legacy schedule schema")
     void testNotWaitIfLate() throws IOException, JsonValidationException, ConfigNotFoundException {
       configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> 60L * 10);
 
@@ -207,7 +207,7 @@ class ConfigFetchActivityTest {
 
   @Test
   @DisplayName("Test that the job will wait a long time if it is MANUAL scheduleType")
-  public void testManualScheduleType() throws IOException, JsonValidationException, ConfigNotFoundException {
+  void testManualScheduleType() throws IOException, JsonValidationException, ConfigNotFoundException {
     configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> Instant.now().getEpochSecond());
 
     Mockito.when(mConfigRepository.getStandardSync(connectionId))
@@ -223,7 +223,7 @@ class ConfigFetchActivityTest {
 
   @Test
   @DisplayName("Test that the job will be immediately scheduled if it is a BASIC_SCHEDULE type on the first run")
-  public void testBasicScheduleTypeFirstRun() throws IOException, JsonValidationException, ConfigNotFoundException {
+  void testBasicScheduleTypeFirstRun() throws IOException, JsonValidationException, ConfigNotFoundException {
     configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> Instant.now().getEpochSecond());
     Mockito.when(mJobPersistence.getLastReplicationJob(connectionId))
         .thenReturn(Optional.empty());
@@ -241,7 +241,7 @@ class ConfigFetchActivityTest {
 
   @Test
   @DisplayName("Test that we will wait the required amount of time with a BASIC_SCHEDULE type on a subsequent run")
-  public void testBasicScheduleSubsequentRun() throws IOException, JsonValidationException, ConfigNotFoundException {
+  void testBasicScheduleSubsequentRun() throws IOException, JsonValidationException, ConfigNotFoundException {
     configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> 60L * 3);
 
     Mockito.when(mJob.getStartedAtInSecond())
@@ -263,7 +263,7 @@ class ConfigFetchActivityTest {
 
   @Test
   @DisplayName("Test that the job will wait to be scheduled if it is a CRON type")
-  public void testCronScheduleSubsequentRun() throws IOException, JsonValidationException, ConfigNotFoundException {
+  void testCronScheduleSubsequentRun() throws IOException, JsonValidationException, ConfigNotFoundException {
     Calendar mockRightNow = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     mockRightNow.set(Calendar.HOUR_OF_DAY, 0);
     mockRightNow.set(Calendar.MINUTE, 0);
