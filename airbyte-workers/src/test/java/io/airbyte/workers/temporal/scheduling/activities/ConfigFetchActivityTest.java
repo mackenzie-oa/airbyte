@@ -34,7 +34,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class ConfigFetchActivityTest {
+class ConfigFetchActivityTest {
 
   @Mock
   private ConfigRepository mConfigRepository;
@@ -94,8 +94,8 @@ public class ConfigFetchActivityTest {
   class TimeToWaitTest {
 
     @Test
-    @DisplayName("Test that the job gets scheduled if it is not manual and if it is the first run with legacy schedule schema")
-    public void testFirstJobNonManual() throws IOException, JsonValidationException, ConfigNotFoundException {
+    @DisplayName("Test that the job get scheduled if it is not manual and if it is the first run")
+    void testFirstJobNonManual() throws IOException, JsonValidationException, ConfigNotFoundException {
       configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> Instant.now().getEpochSecond());
       Mockito.when(mJobPersistence.getLastReplicationJob(connectionId))
           .thenReturn(Optional.empty());
@@ -112,8 +112,8 @@ public class ConfigFetchActivityTest {
     }
 
     @Test
-    @DisplayName("Test that the job will wait for a long time if it is manual in the legacy schedule schema")
-    public void testManual() throws IOException, JsonValidationException, ConfigNotFoundException {
+    @DisplayName("Test that the job will wait for a long time if it is manual")
+    void testManual() throws IOException, JsonValidationException, ConfigNotFoundException {
       configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> Instant.now().getEpochSecond());
 
       Mockito.when(mConfigRepository.getStandardSync(connectionId))
@@ -129,7 +129,7 @@ public class ConfigFetchActivityTest {
 
     @Test
     @DisplayName("Test that the job will wait for a long time if it is disabled")
-    public void testDisable() throws IOException, JsonValidationException, ConfigNotFoundException {
+    void testDisable() throws IOException, JsonValidationException, ConfigNotFoundException {
       configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> Instant.now().getEpochSecond());
 
       Mockito.when(mConfigRepository.getStandardSync(connectionId))
@@ -145,7 +145,7 @@ public class ConfigFetchActivityTest {
 
     @Test
     @DisplayName("Test that the connection will wait for a long time if it is deleted")
-    public void testDeleted() throws IOException, JsonValidationException, ConfigNotFoundException {
+    void testDeleted() throws IOException, JsonValidationException, ConfigNotFoundException {
       configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> Instant.now().getEpochSecond());
 
       Mockito.when(mConfigRepository.getStandardSync(connectionId))
@@ -160,8 +160,8 @@ public class ConfigFetchActivityTest {
     }
 
     @Test
-    @DisplayName("Test we will wait the required amount of time with legacy config")
-    public void testWait() throws IOException, JsonValidationException, ConfigNotFoundException {
+    @DisplayName("Test we will wait the required amount of time")
+    void testWait() throws IOException, JsonValidationException, ConfigNotFoundException {
       configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> 60L * 3);
 
       Mockito.when(mJob.getStartedAtInSecond())
@@ -182,8 +182,8 @@ public class ConfigFetchActivityTest {
     }
 
     @Test
-    @DisplayName("Test we will not wait if we are late in the legacy schedule schema")
-    public void testNotWaitIfLate() throws IOException, JsonValidationException, ConfigNotFoundException {
+    @DisplayName("Test we will not wait if we are late")
+    void testNotWaitIfLate() throws IOException, JsonValidationException, ConfigNotFoundException {
       configFetchActivity = new ConfigFetchActivityImpl(mConfigRepository, mJobPersistence, mConfigs, () -> 60L * 10);
 
       Mockito.when(mJob.getStartedAtInSecond())
